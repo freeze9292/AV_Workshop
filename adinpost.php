@@ -3,7 +3,7 @@
 Plugin Name: Adinpost
 Plugin URI: https://github.com/vailalex/AV_Workshop
 Description: devoir à rendre pour le 21/10
-Version: 0.15
+Version: 0.16
 Author: Alexandre Vaillant 3adev
 */
 
@@ -35,6 +35,19 @@ function menu_html()
 {
     echo '<h1>'.get_admin_page_title().'</h1>';
     echo '<p>Bienvenue sur la page d\'accueil du plugin</p>';
+}
+
+/*bouton barre horizontale admin */
+
+add_action('add_admin_bar_menus', 'av_admin_bar');
+
+function av_admin_bar_down() {
+	global $wp_admin_bar;
+	$wp_admin_bar->add_menu( array( 'id' => 'bas_de_contenu', 'title' => __('Adinpost', 'av_bas_de_contenu'), 'href' => admin_url( 'admin.php?page=av_bdc' ) ) );
+}
+
+function av_admin_bar() {
+add_action( 'admin_bar_menu', 'av_admin_bar_down', 40 );	
 }
 
 
