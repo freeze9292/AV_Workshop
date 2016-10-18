@@ -3,16 +3,15 @@
 Plugin Name: Adinpost
 Plugin URI: https://github.com/vailalex/AV_Workshop
 Description: devoir à rendre pour le 21/10
-Version: 0.17
 Author: Alexandre Vaillant 3adev
 */
 
 
 
-/* Affichage du bas de contenu, protection contre faille xss avec wp_kses (autorisation des lien href) */
+/* Affichage du bas de contenu, protection contre faille xss avec wp_kses (autorisation des lien href) (faire dans la prochaine version) */
 
 function av_ajout_texte($contenu){
-		$mon_bas_de_contenu= "TEST";
+		$mon_bas_de_contenu= get_option("av_bas_de_page");
 		$bas_de_contenu = "<div id='bas_de_contenu'>" . $mon_bas_de_contenu . "</div> ";
 		$nouveau_contenu = $contenu . $bas_de_contenu;
 		return $nouveau_contenu;
@@ -51,6 +50,37 @@ function av_register_settings()
 }
 
 
+/*bouton barre horizontale admin */
+
+add_action('add_admin_bar_menus', 'av_admin_bar');
+
+function av_admin_bar_down() {
+	global $wp_admin_bar;
+	$wp_admin_bar->add_menu( array( 'id' => 'bas_de_contenu', 'title' => __('Adinpost', 'av_bas_de_contenu'), 'href' => admin_url( 'admin.php?page=adinpost' ) ) );
+}
+
+function av_admin_bar() {
+add_action( 'admin_bar_menu', 'av_admin_bar_down', 40 );	
+}
+
+/*admin icon*/
+
+add_action( 'admin_head', 'av_admin_menu_icon' );
+function av_admin_menu_icon() {
+?>
+
+<style type="text/css">
+.dashicons-admin-generic:before {
+content: "\f209";
+}
+</style>
+
+<?php } ?>
+
+<?php
+
+
+
 /*BO formulaire*/
 
 function menu_html()
@@ -82,20 +112,21 @@ function menu_html()
 }
 
 
+/*confirmation */
 
+add_action('admin_notices', 'av_admin_notice');
 
-/*bouton barre horizontale admin */
-
-add_action('add_admin_bar_menus', 'av_admin_bar');
-
-function av_admin_bar_down() {
-	global $wp_admin_bar;
-	$wp_admin_bar->add_menu( array( 'id' => 'bas_de_contenu', 'title' => __('Adinpost', 'av_bas_de_contenu'), 'href' => admin_url( 'admin.php?page=adinpost' ) ) );
+function av_admin_notice() {
+   if( isset($_GET['settings-updated']) ) { ?>
+    <div id="message" class="updated notice notice-success is-dismissible below-h2"> <!-- Css établis en dehors du Plugin et par Wordpress --> 
+	<p><?php _e('Updated', 'av_bas_de_contenu')?> <a href="/wordpress/index.php/"><?php _e('Back to the site', 'av_bas_de_contenu')?></a></p>
+	<button type="button" class="notice-dismiss"></button>
+    </div>
+   <?php
+   }
 }
 
-function av_admin_bar() {
-add_action( 'admin_bar_menu', 'av_admin_bar_down', 40 );	
-}
+
 
 
 ?>
