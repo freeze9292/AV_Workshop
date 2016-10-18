@@ -3,6 +3,7 @@
 Plugin Name: Adinpost
 Plugin URI: https://github.com/vailalex/AV_Workshop
 Description: devoir à rendre pour le 21/10
+Version: 0.2
 Author: Alexandre Vaillant 3adev
 */
 
