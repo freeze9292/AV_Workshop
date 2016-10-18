@@ -3,7 +3,7 @@
 Plugin Name: Adinpost
 Plugin URI: https://github.com/vailalex/AV_Workshop
 Description: devoir à rendre pour le 21/10
-Version: 0.2
+Version: 0.25
 Author: Alexandre Vaillant 3adev
 */
 
@@ -16,9 +16,18 @@ function av_ajout_texte($contenu){
 		$bas_de_contenu = "<div id='bas_de_contenu'>" . $mon_bas_de_contenu . "</div> ";
 		$nouveau_contenu = $contenu . $bas_de_contenu;
 		return $nouveau_contenu;
-	
+		
 }
 
+function av_ajout_texte2($contenu){
+		$mon_haut_de_contenu= get_option("av_haut_de_page");
+		$haut_de_contenu = "<div id='haut_de_contenu'>" . $mon_haut_de_contenu . "</div><br> ";
+		$nouveau_contenu = $haut_de_contenu . $contenu;
+		return $nouveau_contenu;
+		
+}
+
+add_filter( 'the_content', 'av_ajout_texte2');
 add_filter( 'the_content', 'av_ajout_texte');
 
 
@@ -33,21 +42,22 @@ function add_admin_menu()
 
 	    add_action('admin_init', 'av_register_settings');
 
-		
+	
 		
 		/*valeur par défaut du champ de bas de page*/
+		/*
 		$valeur_option = get_option(av_bas_de_page);
 		if($valeur_option==NULL){
 		
 			update_option ('av_bas_de_page', __('Text limited to 300 letters.', 'av_bas_de_contenu'));
-		}
+		}*/
 }
 
 
 function av_register_settings()
 {
     register_setting('av_groupe_options', 'av_bas_de_page');
-
+    register_setting('av_groupe_options', 'av_haut_de_page');
 }
 
 
@@ -80,38 +90,45 @@ content: "\f209";
 
 <?php
 
-
-
 /*BO formulaire*/
 
 function menu_html()
 {
+
 	?>
 	
+
 	<div id="av_formu">
 	<?php
-    echo '<h1>'.get_admin_page_title().'</h1>';
-    _e('Please write your text :', 'av_bas_de_contenu');
-	
+	    echo '<h1>'.get_admin_page_title().'</h1><br>';
+
+
 		?>
+          
+
+       
+
 	
 	 <form id="formulaire" method="post" action="options.php">
 	 
+
+<br>
 		<?php settings_fields('av_groupe_options'); ?>
-		<?php do_settings_sections('av_bas_de_page'); ?>
-		<textarea maxlength="300" rows="4" cols="50" type="text" value="av_form" name="av_bas_de_page"><?php _e(get_option('av_bas_de_page', 'av_bas_de_contenu'));?></textarea>	
-		<?php submit_button(); ?>
-	
+
+		<?php do_settings_sections('av_haut_de_page', 'av_bas_de_page'); ?>
+		<textarea maxlength="300" rows="4" cols="50" type="text" placeholder="Please write your header content" value="av_form" name="av_haut_de_page"><?php _e(get_option('av_haut_de_page', 'av_haut_de_contenu'));?></textarea>	
+		 
+		<textarea maxlength="300" rows="4" cols="50" type="text" placeholder="Please write your footer content" value="av_form" name="av_bas_de_page"><?php _e(get_option('av_bas_de_page', 'av_bas_de_contenu'));?></textarea>	
+
+
+		<br><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"  />
     </form>
+
 
 	</div>
 
-
-
 	<?php
-	
 }
-
 
 /*confirmation */
 
@@ -127,7 +144,33 @@ function av_admin_notice() {
    }
 }
 
+/* css site */
 
+/*Appel Style wordpress (ne marche pas)
+function av_appel_style() {
+        wp_register_style( 'prefix-style', plugins_url('style/style.css', __FILE__) );
+        wp_enqueue_style( 'prefix-style' );
+}
 
-
+add_action( 'wp_enqueue_scripts', 'av_appel_style' );
+*/
 ?>
+
+<style>
+
+
+#haut_de_contenu{
+	text-align:center;
+	color: gray;
+	font-style: italic;
+	font-size: 12px;
+}
+
+#bas_de_contenu{
+	text-align:center;
+	color: gray;
+	font-style: italic;
+	font-size: 12px;
+}
+
+</style>
