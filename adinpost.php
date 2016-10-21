@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Adinpost
-Plugin URI: https://github.com/vailalex/AV_Workshop
+Plugin URL: https://github.com/freeze9292/AV_Workshop
 Description: devoir à rendre pour le 21/10
-Version: 0.25
+Version: 0.26
 Author: Alexandre Vaillant 3adev
 */
 
@@ -14,30 +14,30 @@ add_action( 'plugins_loaded', 'av_traduction' );
 
 
 function av_traduction() {
-  load_plugin_textdomain( 'av_bas_de_contenu', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' ); 
+  load_plugin_textdomain( 'av_down_content', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' ); 
 }
 
 
 /* Affichage du bas de contenu, protection contre faille xss avec wp_kses (autorisation des lien href) */
 
-function av_ajout_texte($contenu){
-		$mon_bas_de_contenu= wp_kses( get_option("av_bas_de_page"), array( 'a' => array( 'href' => array() ) ) );
-		$bas_de_contenu = "<div id='bas_de_contenu'>" . $mon_bas_de_contenu . "</div> ";
-		$nouveau_contenu = $contenu . $bas_de_contenu;
-		return $nouveau_contenu;
+function av_add_text($content){
+		$my_down_content= wp_kses( get_option("av_down_page"), array( 'a' => array( 'href' => array() ) ) );
+		$down_content = "<div id='down_content'>" . $my_down_content . "</div> ";
+		$new_content = $content . $down_content;
+		return $new_content;
 	
 }
 
-function av_ajout_texte2($contenu){
-		$mon_haut_de_contenu= wp_kses( get_option("av_haut_de_page"), array( 'a' => array( 'href' => array() ) ) );
-		$haut_de_contenu = "<div id='haut_de_contenu'>" . $mon_haut_de_contenu . "</div><br> ";
-		$nouveau_contenu = $haut_de_contenu . $contenu;
-		return $nouveau_contenu;
+function av_add_text2($content){
+		$my_up_content= wp_kses( get_option("av_up_page"), array( 'a' => array( 'href' => array() ) ) );
+		$up_content = "<div id='up_content'>" . $my_up_content . "</div><br> ";
+		$new_content = $up_content . $content;
+		return $new_content;
 		
 }
 
-add_filter( 'the_content', 'av_ajout_texte2');
-add_filter( 'the_content', 'av_ajout_texte');
+add_filter( 'the_content', 'av_add_text2');
+add_filter( 'the_content', 'av_add_text');
 
 
 /*BO Admin*/
@@ -56,18 +56,18 @@ function add_admin_menu()
 		
 		/*valeur par défaut du champ de bas de page*/
 		/*
-		$valeur_option = get_option(av_bas_de_page);
+		$valeur_option = get_option(av_down_page);
 		if($valeur_option==NULL){
 		
-			update_option ('av_bas_de_page', __('Text limited to 300 letters.', 'av_bas_de_contenu'));
+			update_option ('av_down_page', __('Text limited to 300 letters.', 'av_down_content'));
 		}*/
 }
 
 
 function av_register_settings()
 {
-    register_setting('av_groupe_options', 'av_bas_de_page');
-    register_setting('av_groupe_options', 'av_haut_de_page');
+    register_setting('av_group_options', 'av_down_page');
+    register_setting('av_group_options', 'av_up_page');
 
 }
 /*Bloc category ne marche pas
@@ -81,10 +81,10 @@ function av_register_settings()
 	{
     foreach ( $cats as $cat ) 
     	{
-    		$p = 'av_bas_de_page_'+$cat->name;
+    		$p = 'av_down_page_'+$cat->name;
     	var_dump($p);
-    		register_setting('av_groupe_options', 'av_bas_de_page_'+$cat->name);
-    		register_setting('av_groupe_options', 'av_haut_de_page_'+$cat->name);
+    		register_setting('av_group_options', 'av_down_page_'+$cat->name);
+    		register_setting('av_group_options', 'av_up_page_'+$cat->name);
     	}
 	}
 }
@@ -97,7 +97,7 @@ add_action('add_admin_bar_menus', 'av_admin_bar');
 function av_admin_bar_down() 
 {
 	global $wp_admin_bar;
-	$wp_admin_bar->add_menu( array( 'id' => 'bas_de_contenu', 'title' => __('Adinpost', 'av_bas_de_contenu'), 'href' => admin_url( 'admin.php?page=adinpost' ) ) );
+	$wp_admin_bar->add_menu( array( 'id' => 'down_content', 'title' => __('Adinpost', 'av_down_content'), 'href' => admin_url( 'admin.php?page=adinpost' ) ) );
 }
 
 function av_admin_bar() 
@@ -158,13 +158,13 @@ function menu_html()
     <input type="file" name="fileToUpload" id="fileToUpload"><br>
 
 	<?php
-	settings_fields('av_groupe_options'); 
-	do_settings_sections('av_haut_de_page', 'av_bas_de_page'); 
+	settings_fields('av_group_options'); 
+	do_settings_sections('av_up_page', 'av_down_page'); 
 	?>
 
-		<textarea maxlength="300" rows="4" cols="50" type="text" placeholder="Please write your header content" value="av_form" name="av_haut_de_page"><?php _e(get_option('av_haut_de_page', 'av_haut_de_contenu'));?></textarea>	
+		<textarea maxlength="300" rows="4" cols="50" type="text" placeholder="Please write your header content" value="av_form" name="av_up_page"><?php _e(get_option('av_up_page', 'av_up_content'));?></textarea>	
 		 
-		<textarea maxlength="300" rows="4" cols="50" type="text" placeholder="Please write your footer content" value="av_form" name="av_bas_de_page"><?php _e(get_option('av_bas_de_page', 'av_bas_de_contenu'));?></textarea>	
+		<textarea maxlength="300" rows="4" cols="50" type="text" placeholder="Please write your footer content" value="av_form" name="av_down_page"><?php _e(get_option('av_down_page', 'av_down_content'));?></textarea>	
 
 
 		<br><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"  />
@@ -186,7 +186,7 @@ function av_admin_notice()
    if( isset($_GET['settings-updated']) ) 
    	{ ?>
     	<div id="message" class="updated notice notice-success is-dismissible below-h2"> <!-- Css établis en dehors du Plugin et par Wordpress --> 
-		<p><?php _e('Updated', 'av_bas_de_contenu')?> <a href="/wordpress/index.php/"><?php _e('Back to the site', 'av_bas_de_contenu')?></a></p>
+		<p><?php _e('Updated', 'av_down_content')?> <a href="/wordpress/index.php/"><?php _e('Back to the site', 'av_down_content')?></a></p>
 		<button type="button" class="notice-dismiss"></button>
     </div>
    <?php
@@ -212,14 +212,14 @@ add_action( 'wp_enqueue_scripts', 'av_appel_style' );
 <style>
 
 
-#haut_de_contenu{
+#up_content{
 	text-align:center;
 	color: gray;
 	font-style: italic;
 	font-size: 12px;
 }
 
-#bas_de_contenu{
+#down_content{
 	text-align:center;
 	color: gray;
 	font-style: italic;
