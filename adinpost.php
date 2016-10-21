@@ -52,15 +52,6 @@ function add_admin_menu()
 
 	    add_action('admin_init', 'av_register_settings');
 	     
-	
-		
-		/*valeur par défaut du champ de bas de page*/
-		/*
-		$valeur_option = get_option(av_down_page);
-		if($valeur_option==NULL){
-		
-			update_option ('av_down_page', __('Text limited to 300 letters.', 'av_down_content'));
-		}*/
 }
 
 
@@ -70,25 +61,6 @@ function av_register_settings()
     register_setting('av_group_options', 'av_up_page');
 
 }
-/*Bloc category ne marche pas
-
-
-
-	$cats= get_categories();
-
-
-	if ($cats) 
-	{
-    foreach ( $cats as $cat ) 
-    	{
-    		$p = 'av_down_page_'+$cat->name;
-    	var_dump($p);
-    		register_setting('av_group_options', 'av_down_page_'+$cat->name);
-    		register_setting('av_group_options', 'av_up_page_'+$cat->name);
-    	}
-	}
-}
-*/
 
 /*bouton barre horizontale admin */
 
@@ -192,19 +164,6 @@ function av_admin_notice()
    <?php
    }
 }
-
-
-/* css site */
-
-/*Appel Style wordpress (ne marche pas)
-function av_appel_style() {
-        wp_register_style( 'prefix-style', plugins_url('style/style.css', __FILE__) );
-        wp_enqueue_style( 'prefix-style' );
-}
-
-add_action( 'wp_enqueue_scripts', 'av_appel_style' );
-*/
-
 
 ?>
 
